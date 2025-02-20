@@ -1,8 +1,4 @@
-import GameEngine from "./GameEngine.ts";
+import { GameApplication } from "./core/application/GameApplication.ts";
 import "./styles.css";
 
-const appNode = document.querySelector<HTMLDivElement>("#app")!;
-
-const engine = new GameEngine();
-
-appNode.append(engine.init());
+new GameApplication().mount(document.querySelector("#root")!);
