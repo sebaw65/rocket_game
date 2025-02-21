@@ -6,7 +6,7 @@ import { System } from "@/types/System"
 export class RenderSystem implements System {
   constructor(private ctx: CanvasRenderingContext2D) {}
 
-  public update(entities: Entity[]): void {
+  public update(entities: Entity[], pixelSize: number): void {
     // Cleanup canvas scene
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
 
@@ -16,7 +16,7 @@ export class RenderSystem implements System {
 
       if (pos && render) {
         this.ctx.fillStyle = render.color
-        this.ctx.fillRect(pos.x, pos.y, 4, 4)
+        this.ctx.fillRect(pos.x, pos.y, pixelSize, pixelSize)
       }
     })
   }

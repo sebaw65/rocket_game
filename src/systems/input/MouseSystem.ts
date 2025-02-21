@@ -43,7 +43,7 @@ export class MouseSystem implements System {
   private addEntity = (x: number, y: number) => {
     const newEntity = new Entity()
     newEntity.addComponent(new PositionComponent(x, y))
-    newEntity.addComponent(new RenderComponent("red"))
+    newEntity.addComponent(new RenderComponent("#0d5388"))
 
     this.entities.push(newEntity)
   }

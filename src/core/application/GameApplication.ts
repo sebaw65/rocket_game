@@ -12,6 +12,7 @@ export class GameApplication {
   // Settings------------------------
   private lastFrame = 0
   private targetFPS = 120
+  private pixelSize = 5
   // Systems ------------------------
   private readonly canvasSystem = CanvasSystem.getInstance()
   private mouseSystem: MouseSystem | null = null
@@ -73,14 +74,16 @@ export class GameApplication {
       if (delta >= 1000 / this.targetFPS) {
         this.mouseSystem?.update(this.entities)
         this.lastFrame = timestamp
-        this.renderSystem?.update(this.entities)
-        this.gravitySystem?.update(
-          this.entities,
-          this.canvasSystem.canvas.height - 5
-        )
+        this.renderSystem?.update(this.entities, this.pixelSize)
+        // this.gravitySystem?.update(
+        //   this.entities,
+        //   this.canvasSystem.canvas.height - 5
+        // )
         this.cellularAutomataSystem?.update(
           this.entities,
-          this.canvasSystem.canvas.height
+          this.canvasSystem.canvas.height,
+          this.canvasSystem.canvas.width,
+          this.pixelSize
         )
         // this.sceneManager.update();
       }
