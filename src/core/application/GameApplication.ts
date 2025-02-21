@@ -1,7 +1,7 @@
 import { Entity } from "@/entities/Entity"
 import { MouseSystem } from "@/systems/input/MouseSystem"
 import { CellularAutomataSystem } from "@/systems/physics/CellularAutomataSystem"
-import { GravitySystem } from "@/systems/physics/GravitySystem"
+// import { GravitySystem } from "@/systems/physics/GravitySystem"
 import { CanvasSystem } from "@/systems/rendering/CanvasSystem"
 import { RenderSystem } from "@/systems/rendering/RenderSystem"
 import { ResizeSystem } from "@/systems/rendering/ResizeSystem"
@@ -18,7 +18,7 @@ export class GameApplication {
   private mouseSystem: MouseSystem | null = null
   private renderSystem: RenderSystem | null = null
   private entities: Entity[] = []
-  private gravitySystem: GravitySystem | null = null
+  // private gravitySystem: GravitySystem | null = null
   private cellularAutomataSystem: CellularAutomataSystem | null = null
   // private sceneManager = new SceneManager();
 
@@ -36,9 +36,9 @@ export class GameApplication {
     new ResizeSystem().initialize(this.canvasSystem.canvas, this.entities)
     this.renderSystem = new RenderSystem(this.canvasSystem.ctx)
     this.mouseSystem = new MouseSystem(this.canvasSystem.canvas, this.entities)
-    this.gravitySystem = new GravitySystem({
-      gravity: 1
-    })
+    // this.gravitySystem = new GravitySystem({
+    //   gravity: 1
+    // })
     this.cellularAutomataSystem = new CellularAutomataSystem()
 
     // Set bg color
