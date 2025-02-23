@@ -9,10 +9,16 @@ export class MouseSystem implements System {
   private mouseY: number = 0
   private isMouseDown: boolean = false
   private entities: Entity[] = []
+  private pixelSize: number = 0
 
-  constructor(canvas: HTMLCanvasElement, entities: Entity[]) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    entities: Entity[],
+    pixelSize: number
+  ) {
     this.canvas = canvas
     this.entities = entities
+    this.pixelSize = pixelSize
     this.setupEventListeners()
   }
 
@@ -32,11 +38,14 @@ export class MouseSystem implements System {
   private setupEventListeners() {
     this.canvas.addEventListener("pointerdown", (e) => {
       this.isMouseDown = true
-      this.addEntity(e.clientX, e.clientY)
+      if (e.clientX % this.pixelSize === 0) {
+        this.addEntity(e.clientX, e.clientY)
+      }
     })
     this.canvas.addEventListener("pointerup", () => (this.isMouseDown = false))
     this.canvas.addEventListener("pointermove", (e) => {
-      if (this.isMouseDown) this.addEntity(e.clientX, e.clientY)
+      if (this.isMouseDown && e.clientX % this.pixelSize === 0)
+        this.addEntity(e.clientX, e.clientY)
     })
   }
 
