@@ -35,7 +35,11 @@ export class GameApplication {
     // implement systems
     new ResizeSystem().initialize(this.canvasSystem.canvas, this.entities)
     this.renderSystem = new RenderSystem(this.canvasSystem.ctx)
-    this.mouseSystem = new MouseSystem(this.canvasSystem.canvas, this.entities)
+    this.mouseSystem = new MouseSystem(
+      this.canvasSystem.canvas,
+      this.entities,
+      this.pixelSize
+    )
     // this.gravitySystem = new GravitySystem({
     //   gravity: 1
     // })
