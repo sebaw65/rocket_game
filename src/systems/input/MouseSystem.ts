@@ -40,12 +40,21 @@ export class MouseSystem implements System {
       this.isMouseDown = true
       if (e.clientX % this.pixelSize === 0) {
         this.addEntity(e.clientX, e.clientY)
+        return
       }
+
+      this.addEntity(e.clientX - (e.clientX % this.pixelSize), e.clientY)
     })
     this.canvas.addEventListener("pointerup", () => (this.isMouseDown = false))
     this.canvas.addEventListener("pointermove", (e) => {
-      if (this.isMouseDown && e.clientX % this.pixelSize === 0)
+      if (!this.isMouseDown) return
+
+      if (e.clientX % this.pixelSize === 0) {
         this.addEntity(e.clientX, e.clientY)
+        return
+      }
+
+      this.addEntity(e.clientX - (e.clientX % this.pixelSize), e.clientY)
     })
   }
 
