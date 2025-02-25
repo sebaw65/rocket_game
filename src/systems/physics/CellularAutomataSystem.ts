@@ -76,38 +76,6 @@ export class CellularAutomataSystem implements System {
           return
         }
       }
-
-      // pos.y += this.gravity
     })
-
-    // entities.forEach((entity) => {
-    //   const pos = entity.getComponent(PositionComponent)
-    //   console.log(pos)
-    //   if (!pos) return
-
-    //   const belowKey = `${pos.x},${pos.y + pixelSize}`
-    //   const leftKey = `${pos.x - pixelSize},${pos.y + pixelSize}`
-    //   const rightKey = `${pos.x + pixelSize},${pos.y + pixelSize}`
-
-    //   if (pos.y + pixelSize >= canvasHeight) return // Blokujemy spadanie poza ekran
-
-    //   if (!this.grid.has(belowKey)) {
-    //     // Jeśli miejsce pod pikselem jest wolne → spadamy
-    //     this.grid.delete(`${pos.x},${pos.y}`)
-    //     pos.y += this.gravity
-    //     this.grid.set(`${pos.x},${pos.y}`, entity)
-    //   } else {
-    //     // Jeśli nie możemy spaść, sprawdzamy boki
-    //     const direction = Math.random() > pixelSize / 2 ? 1 : -1 // Losowy ruch na boki
-    //     const sideKey = direction === 1 ? rightKey : leftKey
-
-    //     if (!this.grid.has(sideKey)) {
-    //       this.grid.delete(`${pos.x},${pos.y}`)
-    //       pos.x += direction
-    //       pos.y += 1
-    //       this.grid.set(`${pos.x},${pos.y}`, entity)
-    //     }
-    //   }
-    // })
   }
 }

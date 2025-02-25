@@ -33,7 +33,7 @@ export class GameApplication {
   // Wywoływany jest raz przy starcie aplikacji
   private bootstrapSystems() {
     // implement systems
-    new ResizeSystem().initialize(this.canvasSystem.canvas, this.entities)
+    new ResizeSystem(this.canvasSystem.ctx, this.entities)
     this.renderSystem = new RenderSystem(this.canvasSystem.ctx)
     this.mouseSystem = new MouseSystem(
       this.canvasSystem.canvas,
