@@ -1,26 +1,21 @@
 import { Entity } from "@/entities/Entity"
 import { MouseSystem } from "@/systems/input/MouseSystem"
 import { CellularAutomataSystem } from "@/systems/physics/CellularAutomataSystem"
-// import { GravitySystem } from "@/systems/physics/GravitySystem"
 import { CanvasSystem } from "@/systems/rendering/CanvasSystem"
 import { RenderSystem } from "@/systems/rendering/RenderSystem"
 import { ResizeSystem } from "@/systems/rendering/ResizeSystem"
-// import { GameplayScene } from "@/scenes/GameplayScene";
-// import { SceneManager } from "@/scenes/SceneManager";
 
 export class GameApplication {
-  // Settings------------------------
   private lastFrame = 0
+  // Settings------------------------
   private targetFPS = 120
-  private pixelSize = 5
+  private pixelSize = 20
   // Systems ------------------------
   private readonly canvasSystem = CanvasSystem.getInstance()
   private mouseSystem: MouseSystem | null = null
   private renderSystem: RenderSystem | null = null
   private entities: Entity[] = []
-  // private gravitySystem: GravitySystem | null = null
   private cellularAutomataSystem: CellularAutomataSystem | null = null
-  // private sceneManager = new SceneManager();
 
   constructor() {
     // init systems
@@ -34,16 +29,16 @@ export class GameApplication {
   private bootstrapSystems() {
     // implement systems
     new ResizeSystem(this.canvasSystem.ctx, this.entities)
-    this.renderSystem = new RenderSystem(this.canvasSystem.ctx)
+    this.renderSystem = new RenderSystem(this.canvasSystem.ctx, this.pixelSize)
     this.mouseSystem = new MouseSystem(
       this.canvasSystem.canvas,
       this.entities,
       this.pixelSize
     )
-    // this.gravitySystem = new GravitySystem({
-    //   gravity: 1
-    // })
-    this.cellularAutomataSystem = new CellularAutomataSystem()
+    this.cellularAutomataSystem = new CellularAutomataSystem(
+      this.canvasSystem.ctx,
+      this.pixelSize
+    )
 
     // Set bg color
     this.canvasSystem.ctx.clearRect(
@@ -59,15 +54,6 @@ export class GameApplication {
       this.canvasSystem.canvas.width,
       this.canvasSystem.canvas.height
     )
-
-    // const player = new Entity()
-    // player.addComponent(new PositionComponent(50, 50))
-    // player.addComponent(new RenderComponent("red"))
-    // this.entities.push(player)
-
-    // const gameplayScene = new GameplayScene(this.canvasSystem.canvas);
-    // this.sceneManager.addScene("gameplay", gameplayScene);
-    // this.sceneManager.goToScene("gameplay");
   }
 
   private gameLoop() {
@@ -78,21 +64,10 @@ export class GameApplication {
       if (delta >= 1000 / this.targetFPS) {
         this.mouseSystem?.update(this.entities)
         this.lastFrame = timestamp
-        this.renderSystem?.update(this.entities, this.pixelSize)
-        // this.gravitySystem?.update(
-        //   this.entities,
-        //   this.canvasSystem.canvas.height - 5
-        // )
-        this.cellularAutomataSystem?.update(
-          this.entities,
-          this.canvasSystem.canvas.height,
-          this.canvasSystem.canvas.width,
-          this.pixelSize
-        )
-        // this.sceneManager.update();
+        this.renderSystem?.update(this.entities)
+        this.cellularAutomataSystem?.update(this.entities)
       }
 
-      // this.sceneManager.render();
       requestAnimationFrame(loop)
     }
 

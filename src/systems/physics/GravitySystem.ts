@@ -4,20 +4,23 @@ import { System } from "@/types/System"
 
 interface GravitySystemConfig {
   gravity: number
+  groundYPosition: number
 }
 
 export class GravitySystem implements System {
   private gravity: number = 1
+  private groundYPosition: number
 
-  constructor({ gravity }: GravitySystemConfig) {
+  constructor({ gravity, groundYPosition }: GravitySystemConfig) {
     this.gravity = gravity
+    this.groundYPosition = groundYPosition
   }
 
-  public update(entities: Entity[], groundYPosition: number): void {
+  public update(entities: Entity[]): void {
     entities.forEach((entity) => {
       const pos = entity.getComponent(PositionComponent)
 
-      if (pos && pos.y < groundYPosition) {
+      if (pos && pos.y < this.groundYPosition) {
         pos.y += this.gravity
       }
     })

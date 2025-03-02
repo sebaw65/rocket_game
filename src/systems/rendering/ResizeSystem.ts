@@ -1,8 +1,7 @@
 import { PositionComponent } from "@/components/PositionComponent"
 import { Entity } from "@/entities/Entity"
-import { System } from "@/types/System"
 
-export class ResizeSystem implements System {
+export class ResizeSystem {
   public constructor(
     private canvasCtx: CanvasRenderingContext2D,
     private entities: Entity[]
