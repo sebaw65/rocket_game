@@ -9,7 +9,7 @@ export class GameApplication {
   private lastFrame = 0
   // Settings------------------------
   private targetFPS = 120
-  private pixelSize = 20
+  private pixelSize = 5
   // Systems ------------------------
   private readonly canvasSystem = CanvasSystem.getInstance()
   private mouseSystem: MouseSystem | null = null
