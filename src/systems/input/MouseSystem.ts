@@ -5,12 +5,9 @@ import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
 import { MaterialType } from "@/types/MaterialType"
 import { Point } from "@/types/Point"
-import { System } from "@/types/System"
 
 export class MouseSystem {
   private canvas: HTMLCanvasElement
-  private mouseX: number = 0
-  private mouseY: number = 0
   private isMouseDown: boolean = false
   private entities: Entity[] = []
   private pixelSize: number
@@ -27,17 +24,9 @@ export class MouseSystem {
     this.setupEventListeners()
   }
 
-  public update(pixelSize: number, material: MaterialType): void {
+  public updateStrokeParams(pixelSize: number, material: MaterialType): void {
     this.pixelSize = pixelSize
     this.material = material
-    // if (!this.isMouseDown) return
-    // entities.forEach((entity) => {
-    //   const pos = entity.getComponent(PositionComponent)
-    //   if (pos && this.mouseX && this.mouseY) {
-    //     pos.x = this.mouseX
-    //     pos.y = this.mouseY
-    //   }
-    // })
   }
 
   private setupEventListeners() {
