@@ -1,3 +1,4 @@
+import { DrawingSettings } from "@/data/DrawingSettings"
 import { Entity } from "@/entities/Entity"
 import { MouseSystem } from "@/systems/input/MouseSystem"
 import { CellularAutomataSystem } from "@/systems/physics/CellularAutomataSystem"
@@ -9,15 +10,17 @@ export class GameApplication {
   private lastFrame = 0
   // Settings------------------------
   private targetFPS = 120
-  private pixelSize = 5
   // Systems ------------------------
   private readonly canvasSystem = CanvasSystem.getInstance()
   private mouseSystem: MouseSystem | null = null
   private renderSystem: RenderSystem | null = null
   private entities: Entity[] = []
   private cellularAutomataSystem: CellularAutomataSystem | null = null
+  private drawingSettings: DrawingSettings
 
   constructor() {
+    this.drawingSettings = DrawingSettings.getInstance()
+
     // init systems
     this.bootstrapSystems()
     // init gameloop
@@ -29,15 +32,18 @@ export class GameApplication {
   private bootstrapSystems() {
     // implement systems
     new ResizeSystem(this.canvasSystem.ctx, this.entities)
-    this.renderSystem = new RenderSystem(this.canvasSystem.ctx, this.pixelSize)
+    this.renderSystem = new RenderSystem(
+      this.canvasSystem.ctx,
+      this.drawingSettings.getStrokeSize()
+    )
     this.mouseSystem = new MouseSystem(
       this.canvasSystem.canvas,
       this.entities,
-      this.pixelSize
+      this.drawingSettings.getStrokeSize()
     )
     this.cellularAutomataSystem = new CellularAutomataSystem(
       this.canvasSystem.ctx,
-      this.pixelSize
+      this.drawingSettings.getStrokeSize()
     )
 
     // Set bg color
@@ -62,7 +68,12 @@ export class GameApplication {
 
       // fps control
       if (delta >= 1000 / this.targetFPS) {
-        this.mouseSystem?.update(this.entities)
+        console.log(this.drawingSettings.getStrokeSize())
+
+        this.mouseSystem?.updateStrokeParams(
+          this.drawingSettings.getStrokeSize(),
+          this.drawingSettings.getMaterial()
+        )
         this.lastFrame = timestamp
         this.renderSystem?.update(this.entities)
         this.cellularAutomataSystem?.update(this.entities)

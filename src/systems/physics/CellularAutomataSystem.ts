@@ -47,7 +47,6 @@ export class CellularAutomataSystem implements System {
       const materialProperties = entity.getComponent(RenderMaterial)
 
       if (!pos) return
-      console.log(materialProperties?.isMovable)
       if (materialProperties?.isMovable === false) return
 
       const below = `${pos.x},${pos.y + this.pixelSize}`
