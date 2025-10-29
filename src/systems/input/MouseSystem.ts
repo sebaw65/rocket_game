@@ -1,6 +1,8 @@
+import { MaterialComponent } from "@/components/MaterialComponent"
 import { PositionComponent } from "@/components/PositionComponent"
-import { RenderComponent } from "@/components/RenderComponent"
+import { RenderMaterial } from "@/components/RenderMaterial"
 import { Entity } from "@/entities/Entity"
+import { MaterialType } from "@/types/MaterialType"
 import { System } from "@/types/System"
 
 export class MouseSystem implements System {
@@ -61,7 +63,14 @@ export class MouseSystem implements System {
   private addEntity = (x: number, y: number) => {
     const newEntity = new Entity()
     newEntity.addComponent(new PositionComponent(x, y))
-    newEntity.addComponent(new RenderComponent("#0d5388"))
+    const materialComponent = new MaterialComponent(MaterialType.STONE)
+    newEntity.addComponent(
+      new RenderMaterial(
+        materialComponent.getColor(),
+        materialComponent.isLiquid(),
+        materialComponent.isMovable()
+      )
+    )
 
     this.entities.push(newEntity)
   }
