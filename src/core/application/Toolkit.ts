@@ -1,3 +1,4 @@
+import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { DrawingSettings } from "@/data/DrawingSettings"
 import { MaterialType } from "@/types/MaterialType"
 
@@ -32,12 +33,12 @@ export class Toolkit {
     const wrapper = document.createElement("div")
     wrapper.innerText = "Stroke Size:"
 
-    const strokeSize = [5, 7, 9, 20, 30]
+    const strokeSize = [5, 10, 15, 20, 30]
 
     for (let i = 0; i < strokeSize.length; i++) {
       const size = strokeSize[i]
       const strokeBtn = document.createElement("button")
-      strokeBtn.innerText = size.toString()
+      strokeBtn.innerText = (size / DEFAULT_PIXEL_SIZE).toString()
       wrapper.appendChild(strokeBtn)
       strokeBtn.addEventListener("click", () =>
         this.drawingSettings.setStrokeWidth(size)

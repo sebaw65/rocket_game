@@ -1,6 +1,7 @@
 import { MaterialComponent } from "@/components/MaterialComponent"
 import { PositionComponent } from "@/components/PositionComponent"
 import { RenderMaterial } from "@/components/RenderMaterial"
+import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
 import { MaterialType } from "@/types/MaterialType"
 import { Point } from "@/types/Point"
@@ -26,7 +27,6 @@ export class MouseSystem {
     this.setupEventListeners()
   }
 
-  //TODO Dont remember why I created this
   public update(pixelSize: number, material: MaterialType): void {
     this.pixelSize = pixelSize
     this.material = material
@@ -70,18 +70,39 @@ export class MouseSystem {
   }
 
   private addEntity = (point: Point) => {
-    const newEntity = new Entity()
-    newEntity.addComponent(new PositionComponent(point.x, point.y))
-    const materialComponent = new MaterialComponent(this.material)
-    console.log(this.material)
-    newEntity.addComponent(
-      new RenderMaterial(
-        materialComponent.getColor(),
-        materialComponent.isLiquid(),
-        materialComponent.isMovable()
-      )
-    )
+    let entities: Entity[] = []
 
-    this.entities.push(newEntity)
+    if (this.pixelSize === DEFAULT_PIXEL_SIZE) {
+      const newEntity = new Entity()
+      const materialComponent = new MaterialComponent(this.material)
+      newEntity.addComponent(
+        new RenderMaterial(
+          materialComponent.getColor(),
+          materialComponent.isLiquid(),
+          materialComponent.isMovable()
+        )
+      )
+      newEntity.addComponent(new PositionComponent(point.x, point.y))
+      entities.push(newEntity)
+    } else {
+      const count = this.pixelSize / DEFAULT_PIXEL_SIZE
+      for (let i = 0; i < count; i++) {
+        const newEntity = new Entity()
+        const materialComponent = new MaterialComponent(this.material)
+        newEntity.addComponent(
+          new RenderMaterial(
+            materialComponent.getColor(),
+            materialComponent.isLiquid(),
+            materialComponent.isMovable()
+          )
+        )
+        const newXPosition = point.x + i * DEFAULT_PIXEL_SIZE
+        newEntity.addComponent(new PositionComponent(newXPosition, point.y))
+        entities.push(newEntity)
+      }
+    }
+    console.log(entities)
+
+    this.entities.push(...entities)
   }
 }
