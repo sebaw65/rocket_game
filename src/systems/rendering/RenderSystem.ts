@@ -1,5 +1,5 @@
 import { PositionComponent } from "@/components/PositionComponent"
-import { RenderComponent } from "@/components/RenderComponent"
+import { RenderMaterial } from "@/components/RenderMaterial"
 import { Entity } from "@/entities/Entity"
 import { System } from "@/types/System"
 
@@ -23,7 +23,7 @@ export class RenderSystem implements System {
 
     entities.forEach((entity) => {
       const pos = entity.getComponent(PositionComponent)
-      const render = entity.getComponent(RenderComponent)
+      const render = entity.getComponent(RenderMaterial)
 
       if (pos && render) {
         this.canvasCtx.fillStyle = render.color

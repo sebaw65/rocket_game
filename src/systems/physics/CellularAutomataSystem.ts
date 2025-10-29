@@ -1,4 +1,5 @@
 import { PositionComponent } from "@/components/PositionComponent"
+import { RenderMaterial } from "@/components/RenderMaterial"
 import { Entity } from "@/entities/Entity"
 import { System } from "@/types/System"
 
@@ -43,8 +44,11 @@ export class CellularAutomataSystem implements System {
 
     entities.forEach((entity) => {
       const pos = entity.getComponent(PositionComponent)
+      const materialProperties = entity.getComponent(RenderMaterial)
 
       if (!pos) return
+      console.log(materialProperties?.isMovable)
+      if (materialProperties?.isMovable === false) return
 
       const below = `${pos.x},${pos.y + this.pixelSize}`
       const left = `${pos.x - this.pixelSize},${pos.y}`
@@ -59,18 +63,21 @@ export class CellularAutomataSystem implements System {
         pos.y += this.gravity
         this.grid.set(`${pos.x},${pos.y}`, entity)
       } else {
-        const direction = Math.random() > 0.5 ? this.pixelSize : -this.pixelSize
-        const side = direction > 0 ? right : left
+        if (materialProperties?.isLiquid) {
+          const direction =
+            Math.random() > 0.5 ? this.pixelSize : -this.pixelSize
+          const side = direction > 0 ? right : left
 
-        if (
-          !this.grid.has(side) &&
-          pos.x >= 0 &&
-          pos.x <= canvasWidth - this.pixelSize
-        ) {
-          this.grid.delete(`${pos.x},${pos.y}`)
-          pos.x += direction
-          this.grid.set(`${pos.x},${pos.y}`, entity)
-          return
+          if (
+            !this.grid.has(side) &&
+            pos.x >= 0 &&
+            pos.x <= canvasWidth - this.pixelSize
+          ) {
+            this.grid.delete(`${pos.x},${pos.y}`)
+            pos.x += direction
+            this.grid.set(`${pos.x},${pos.y}`, entity)
+            return
+          }
         }
       }
     })
