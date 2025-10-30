@@ -68,8 +68,6 @@ export class GameApplication {
 
       // fps control
       if (delta >= 1000 / this.targetFPS) {
-        console.log(this.drawingSettings.getStrokeSize())
-
         this.mouseSystem?.updateStrokeParams(
           this.drawingSettings.getStrokeSize(),
           this.drawingSettings.getMaterial()

@@ -32,35 +32,28 @@ export class MouseSystem {
   private setupEventListeners() {
     this.canvas.addEventListener("pointerdown", (e) => {
       this.isMouseDown = true
-      if (
-        e.clientX % DEFAULT_PIXEL_SIZE === 0 &&
-        e.clientY % DEFAULT_PIXEL_SIZE === 0
-      ) {
-        this.addEntity({ x: e.clientX, y: e.clientY })
-        return
-      }
-
-      this.addEntity({
-        x: e.clientX - (e.clientX % DEFAULT_PIXEL_SIZE),
-        y: e.clientY - (e.clientY % DEFAULT_PIXEL_SIZE)
-      })
+      this.drawPixel({ x: e.clientX, y: e.clientY })
     })
     this.canvas.addEventListener("pointerup", () => (this.isMouseDown = false))
     this.canvas.addEventListener("pointermove", (e) => {
       if (!this.isMouseDown) return
 
-      if (
-        e.clientX % DEFAULT_PIXEL_SIZE === 0 &&
-        e.clientY % DEFAULT_PIXEL_SIZE === 0
-      ) {
-        this.addEntity({ x: e.clientX, y: e.clientY })
-        return
-      }
+      this.drawPixel({ x: e.clientX, y: e.clientY })
+    })
+  }
 
-      this.addEntity({
-        x: e.clientX - (e.clientX % DEFAULT_PIXEL_SIZE),
-        y: e.clientY - (e.clientY % DEFAULT_PIXEL_SIZE)
-      })
+  private drawPixel = (point: Point) => {
+    if (
+      point.x % DEFAULT_PIXEL_SIZE === 0 &&
+      point.y % DEFAULT_PIXEL_SIZE === 0
+    ) {
+      this.addEntity(point)
+      return
+    }
+
+    this.addEntity({
+      x: point.x - (point.x % DEFAULT_PIXEL_SIZE),
+      y: point.y - (point.y % DEFAULT_PIXEL_SIZE)
     })
   }
 
@@ -96,7 +89,6 @@ export class MouseSystem {
         entities.push(newEntity)
       }
     }
-    console.log(entities)
 
     this.entities.push(...entities)
   }
