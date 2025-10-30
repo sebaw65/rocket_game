@@ -32,28 +32,34 @@ export class MouseSystem {
   private setupEventListeners() {
     this.canvas.addEventListener("pointerdown", (e) => {
       this.isMouseDown = true
-      if (e.clientX % this.pixelSize === 0) {
+      if (
+        e.clientX % DEFAULT_PIXEL_SIZE === 0 &&
+        e.clientY % DEFAULT_PIXEL_SIZE === 0
+      ) {
         this.addEntity({ x: e.clientX, y: e.clientY })
         return
       }
 
       this.addEntity({
-        x: e.clientX - (e.clientX % this.pixelSize),
-        y: e.clientY
+        x: e.clientX - (e.clientX % DEFAULT_PIXEL_SIZE),
+        y: e.clientY - (e.clientY % DEFAULT_PIXEL_SIZE)
       })
     })
     this.canvas.addEventListener("pointerup", () => (this.isMouseDown = false))
     this.canvas.addEventListener("pointermove", (e) => {
       if (!this.isMouseDown) return
 
-      if (e.clientX % this.pixelSize === 0) {
+      if (
+        e.clientX % DEFAULT_PIXEL_SIZE === 0 &&
+        e.clientY % DEFAULT_PIXEL_SIZE === 0
+      ) {
         this.addEntity({ x: e.clientX, y: e.clientY })
         return
       }
 
       this.addEntity({
-        x: e.clientX - (e.clientX % this.pixelSize),
-        y: e.clientY
+        x: e.clientX - (e.clientX % DEFAULT_PIXEL_SIZE),
+        y: e.clientY - (e.clientY % DEFAULT_PIXEL_SIZE)
       })
     })
   }
