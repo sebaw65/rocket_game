@@ -1,4 +1,4 @@
-import { MaterialType } from "@/types/MaterialType"
+import { material, MaterialType } from "@/types/MaterialType"
 
 interface SettingsType {
   material: MaterialType
@@ -9,7 +9,7 @@ export class DrawingSettings {
   private static instance: DrawingSettings
 
   private settings: SettingsType = {
-    material: MaterialType.WATER,
+    material: material.WATER,
     stronkeSize: 5
   }
 

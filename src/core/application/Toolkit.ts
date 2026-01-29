@@ -1,6 +1,6 @@
 import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { DrawingSettings } from "@/data/DrawingSettings"
-import { MaterialType } from "@/types/MaterialType"
+import { material, MaterialType } from "@/types/MaterialType"
 
 export class Toolkit {
   private drawingSettings: DrawingSettings
@@ -14,12 +14,12 @@ export class Toolkit {
     const wrapper = document.createElement("div")
     wrapper.innerText = "Materials:"
 
-    for (let i = 0; i < Object.keys(MaterialType).length; i++) {
+    for (let i = 0; i < Object.keys(material).length; i++) {
       const materialBtn = document.createElement("button")
-      materialBtn.innerText = Object.keys(MaterialType)[i]
+      materialBtn.innerText = Object.keys(material)[i]
       materialBtn.addEventListener("click", () =>
         this.drawingSettings.setMaterial(
-          Object.keys(MaterialType)[i] as MaterialType
+          Object.keys(material)[i] as MaterialType
         )
       )
 
