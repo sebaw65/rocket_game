@@ -1,4 +1,3 @@
-import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { DrawingSettings } from "@/data/DrawingSettings"
 import { MATERIAL, MaterialType } from "@/types/Material"
 

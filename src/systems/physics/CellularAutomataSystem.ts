@@ -2,7 +2,7 @@ import { PositionComponent } from "@/components/PositionComponent"
 import { RenderMaterial } from "@/components/RenderMaterial"
 import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
-import { DIRECTION, DirectionType } from "@/types/Direction"
+import { DIRECTION } from "@/types/Direction"
 import { Point, PointUtils } from "@/types/Point"
 import { System } from "@/types/System"
 
@@ -10,7 +10,6 @@ export class CellularAutomataSystem implements System {
   private grid: Map<string, Entity>
   private gravityMultiplier: number = 1
   private canvasCtx: CanvasRenderingContext2D
-  private direction: DirectionType | null = null
 
   constructor(canvasCtx: CanvasRenderingContext2D) {
     this.grid = new Map()
@@ -35,6 +34,7 @@ export class CellularAutomataSystem implements System {
     })
   }
 
+  //TODO Dodać ruch po skosie
   private applyGravity(entities: Entity[]) {
     const canvasHeightGrid =
       Math.floor(this.canvasCtx.canvas.height / DEFAULT_PIXEL_SIZE) - 1
