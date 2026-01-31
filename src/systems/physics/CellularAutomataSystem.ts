@@ -1,6 +1,8 @@
+import { ObjectPsychicsComponent } from "@/components/ObjectPsychicsComponent"
 import { PositionComponent } from "@/components/PositionComponent"
 import { RenderMaterial } from "@/components/RenderMaterial"
 import { Entity } from "@/entities/Entity"
+import { DIRECTION, DirectionType } from "@/types/Direction"
 import { System } from "@/types/System"
 
 export class CellularAutomataSystem implements System {
@@ -8,6 +10,7 @@ export class CellularAutomataSystem implements System {
   private gravity: number = 1
   private canvasCtx: CanvasRenderingContext2D
   private pixelSize: number
+  private direction: DirectionType | null = null
 
   constructor(canvasCtx: CanvasRenderingContext2D, pixelSize: number) {
     this.grid = new Map()
@@ -39,14 +42,17 @@ export class CellularAutomataSystem implements System {
       const posA = a.getComponent(PositionComponent)
       const posB = b.getComponent(PositionComponent)
 
-      return posB!.y - posA!.y // Najpierw sprawdzamy najniżej położone piksele
+      return posB!.y - posA!.y
     })
 
     entities.forEach((entity) => {
-      const pos = entity.getComponent(PositionComponent)
-      const materialProperties = entity.getComponent(RenderMaterial)
+      const objPsychics = entity.getComponent(ObjectPsychicsComponent)
+      if (!objPsychics?.isMoving) return
 
+      const pos = entity.getComponent(PositionComponent)
       if (!pos) return
+
+      const materialProperties = entity.getComponent(RenderMaterial)
       if (materialProperties?.isMovable === false) return
 
       const below = `${pos.x},${pos.y + this.pixelSize}`
@@ -65,7 +71,14 @@ export class CellularAutomataSystem implements System {
         if (materialProperties?.isLiquid) {
           const direction =
             Math.random() > 0.5 ? this.pixelSize : -this.pixelSize
-          const side = direction > 0 ? right : left
+          this.direction = direction > 0 ? DIRECTION.RIGHT : DIRECTION.LEFT
+
+          let side
+          if (this.direction) side = this.direction
+
+          side = this.direction === DIRECTION.RIGHT ? right : left
+
+          console.log(side)
 
           if (
             !this.grid.has(side) &&

@@ -1,24 +1,24 @@
 import { MaterialProperties } from "@/types/MaterialProperties"
-import { material, MaterialType } from "@/types/MaterialType"
+import { MATERIAL, MaterialType } from "@/types/Material"
 
 export const MATERIALS_CONFIG: Record<MaterialType, MaterialProperties> = {
-  [material.WATER]: {
+  [MATERIAL.WATER]: {
     color: "#0d5388",
     isLiquid: true
   },
-  [material.SAND]: {
+  [MATERIAL.SAND]: {
     color: "#eaee1dff",
     isLiquid: false
   },
-  [material.LAVA]: {
+  [MATERIAL.LAVA]: {
     color: "#ca0f0fff",
     isLiquid: true
   },
-  [material.SNOW]: {
+  [MATERIAL.SNOW]: {
     color: "#e7ddddff",
     isLiquid: false
   },
-  [material.STONE]: {
+  [MATERIAL.STONE]: {
     color: "#948f8fff",
     isLiquid: false,
     isMovable: false

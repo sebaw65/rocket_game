@@ -1,7 +1,7 @@
 import { MATERIALS_CONFIG } from "@/config/MaterialsConfig"
 import { Component } from "@/types/Component"
 import { MaterialProperties } from "@/types/MaterialProperties"
-import { MaterialType } from "@/types/MaterialType"
+import { MaterialType } from "@/types/Material"
 
 export class MaterialComponent extends Component {
   public properties: MaterialProperties
