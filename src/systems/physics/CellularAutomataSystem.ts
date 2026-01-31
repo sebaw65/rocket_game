@@ -69,13 +69,14 @@ export class CellularAutomataSystem implements System {
             y: gridPos.y + fallSpeed
           })
         )
+        return
       } else {
         if (materialProperties?.isLiquid) {
           const leftPosition = gridPos.x - 1
           const rightPosition = gridPos.x + 1
 
-          const left = `${leftPosition},${gridPos.y}`
-          const right = `${rightPosition},${gridPos.y}`
+          const leftKey = `${leftPosition},${gridPos.y}`
+          const rightKey = `${rightPosition},${gridPos.y}`
 
           if (!materialProperties.direction) {
             const direction = Math.random() > 0.5 ? 1 : -1
@@ -84,7 +85,9 @@ export class CellularAutomataSystem implements System {
           }
 
           const side =
-            materialProperties.direction === DIRECTION.RIGHT ? right : left
+            materialProperties.direction === DIRECTION.RIGHT
+              ? rightKey
+              : leftKey
 
           if (
             !this.grid.has(side) &&
@@ -105,33 +108,38 @@ export class CellularAutomataSystem implements System {
             return
           }
 
-          // const oppositeSide =
-          //   materialProperties.direction === DIRECTION.RIGHT ? left : right
+          const oppositeSide =
+            materialProperties.direction === DIRECTION.RIGHT
+              ? leftKey
+              : rightKey
+          const oppositePos =
+            materialProperties.direction === DIRECTION.RIGHT
+              ? leftPosition
+              : rightPosition
 
-          // if (
-          //   !this.grid.has(oppositeSide) &&
-          //   leftPosition >= 0 &&
-          //   rightPosition <= canvasWidth
-          // ) {
-          //   materialProperties.direction =
-          //     materialProperties.direction === DIRECTION.LEFT
-          //       ? DIRECTION.RIGHT
-          //       : DIRECTION.LEFT
+          if (
+            !this.grid.has(oppositeSide) &&
+            this.isPointInsideCanvasWidthGrid({ x: oppositePos, y: gridPos.y })
+          ) {
+            materialProperties.direction =
+              materialProperties.direction === DIRECTION.LEFT
+                ? DIRECTION.RIGHT
+                : DIRECTION.LEFT
 
-          //   this.grid.delete(`${gridPos.x},${pos.y}`)
-          //   this.grid.set(`${gridPos.x},${gridPos.y}`, entity)
-          //   const offset =
-          //     materialProperties.direction === DIRECTION.RIGHT ? 1 : -1
+            this.grid.delete(`${gridPos.x},${gridPos.y}`)
+            this.grid.set(`${oppositePos},${gridPos.y}`, entity)
+            const offset =
+              materialProperties.direction === DIRECTION.RIGHT ? 1 : -1
 
-          //   this.updateEntityPositionFromGridPos(
-          //     pos,
-          //     PointUtils.getCanvasCoord({
-          //       x: gridPos.x + offset,
-          //       y: gridPos.y
-          //     })
-          //   )
-          //   return
-          // }
+            this.updateEntityPositionFromGridPos(
+              pos,
+              PointUtils.getCanvasCoord({
+                x: gridPos.x + offset,
+                y: gridPos.y
+              })
+            )
+            return
+          }
         }
       }
     })
