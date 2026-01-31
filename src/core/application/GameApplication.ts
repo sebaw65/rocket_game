@@ -9,7 +9,7 @@ import { ResizeSystem } from "@/systems/rendering/ResizeSystem"
 export class GameApplication {
   private lastFrame = 0
   // Settings------------------------
-  private targetFPS = 120
+  private targetFPS = 60
   // Systems ------------------------
   private readonly canvasSystem = CanvasSystem.getInstance()
   private mouseSystem: MouseSystem | null = null

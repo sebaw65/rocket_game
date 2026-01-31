@@ -24,6 +24,7 @@ export class RenderSystem implements System {
       const pos = entity.getComponent(PositionComponent)
       const render = entity.getComponent(RenderMaterial)
 
+      // console.log(pos)
       if (pos && render) {
         this.canvasCtx.fillStyle = render.color
         this.canvasCtx.fillRect(

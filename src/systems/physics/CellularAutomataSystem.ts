@@ -3,11 +3,12 @@ import { RenderMaterial } from "@/components/RenderMaterial"
 import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
 import { DIRECTION, DirectionType } from "@/types/Direction"
+import { Point, PointUtils } from "@/types/Point"
 import { System } from "@/types/System"
 
 export class CellularAutomataSystem implements System {
   private grid: Map<string, Entity>
-  private gravity: number = 1
+  private gravityMultiplier: number = 1
   private canvasCtx: CanvasRenderingContext2D
   private direction: DirectionType | null = null
 
@@ -25,72 +26,129 @@ export class CellularAutomataSystem implements System {
     this.grid.clear()
     entities.forEach((entity) => {
       const pos = entity.getComponent(PositionComponent)
+      if (!pos) return
+
+      const gridPos = PointUtils.getGridPosition(pos)
       if (pos) {
-        this.grid.set(`${pos.x},${pos.y}`, entity)
+        this.grid.set(`${gridPos.x},${gridPos.y}`, entity)
       }
     })
   }
 
   private applyGravity(entities: Entity[]) {
-    const canvasHeight = this.canvasCtx.canvas.height
-    const canvasWidth = this.canvasCtx.canvas.width
+    const canvasHeightGrid =
+      Math.floor(this.canvasCtx.canvas.height / DEFAULT_PIXEL_SIZE) - 1
 
     // Iterate from bottom to the top to avoid pixel skipping
     this.sortFromBottomToTop(entities)
 
+    const fallSpeed = Math.round(1 * this.gravityMultiplier)
     entities.forEach((entity) => {
       const pos = entity.getComponent(PositionComponent)
       if (!pos) return
 
+      const gridPos = PointUtils.getGridPosition(pos)
+
       const materialProperties = entity.getComponent(RenderMaterial)
-      // stałe bloki, mają wyłączone ruszanie
       if (materialProperties?.isMovable === false) return
 
-      const below = `${pos.x},${pos.y + DEFAULT_PIXEL_SIZE}`
+      const positionBelow = `${gridPos.x},${gridPos.y + fallSpeed}`
 
-      // console.log(pos.y, canvasHeight - this.pixelSize)
       // don't move further than the size of canvas
-      if (pos.y >= canvasHeight - DEFAULT_PIXEL_SIZE) return
+      if (gridPos.y > canvasHeightGrid - fallSpeed) return
 
-      // move down if nothing is below entity
-      if (!this.grid.has(below)) {
-        this.grid.delete(`${pos.x},${pos.y}`)
-        pos.y += this.gravity
-        this.grid.set(`${pos.x},${pos.y}`, entity)
+      if (!this.grid.has(positionBelow)) {
+        if (materialProperties) materialProperties.direction = null
+
+        this.grid.delete(`${gridPos.x},${gridPos.y}`)
+        this.grid.set(`${positionBelow}`, entity)
+        this.updateEntityPositionFromGridPos(
+          pos,
+          PointUtils.getCanvasCoord({
+            x: gridPos.x,
+            y: gridPos.y + fallSpeed
+          })
+        )
       } else {
         if (materialProperties?.isLiquid) {
-          const left = `${pos.x - DEFAULT_PIXEL_SIZE},${pos.y}`
-          const right = `${pos.x + DEFAULT_PIXEL_SIZE},${pos.y}`
+          const leftPosition = gridPos.x - 1
+          const rightPosition = gridPos.x + 1
 
-          // const entityDirection = materialProperties.direction
+          const left = `${leftPosition},${gridPos.y}`
+          const right = `${rightPosition},${gridPos.y}`
 
-          // console.log(entityDirection)
-          // TODO Losowanie tylko przy opadnięciu piętro w dół. W innym przypadku trzymaj kierunek
-          const direction =
-            Math.random() > 0.5 ? DEFAULT_PIXEL_SIZE : -DEFAULT_PIXEL_SIZE
+          if (!materialProperties.direction) {
+            const direction = Math.random() > 0.5 ? 1 : -1
+            materialProperties.direction =
+              direction > 0 ? DIRECTION.RIGHT : DIRECTION.LEFT
+          }
 
-          this.direction = direction > 0 ? DIRECTION.RIGHT : DIRECTION.LEFT
+          const side =
+            materialProperties.direction === DIRECTION.RIGHT ? right : left
 
-          let side
-          if (this.direction) side = this.direction
-          // console.log("direction", this.direction)
-          side = this.direction === DIRECTION.RIGHT ? right : left
-
-          // console.log("has side", this.grid.has(side))
-          // console.log("side", side)
           if (
             !this.grid.has(side) &&
-            pos.x >= 0 &&
-            pos.x <= canvasWidth - DEFAULT_PIXEL_SIZE
+            this.isPointInsideCanvasWidthGrid(gridPos)
           ) {
-            this.grid.delete(`${pos.x},${pos.y}`)
-            pos.x += direction
-            this.grid.set(`${pos.x},${pos.y}`, entity)
+            this.grid.delete(`${gridPos.x},${pos.y}`)
+            this.grid.set(`${gridPos.x},${gridPos.y}`, entity)
+            const offset =
+              materialProperties.direction === DIRECTION.RIGHT ? 1 : -1
+
+            this.updateEntityPositionFromGridPos(
+              pos,
+              PointUtils.getCanvasCoord({
+                x: gridPos.x + offset,
+                y: gridPos.y
+              })
+            )
             return
           }
+
+          // const oppositeSide =
+          //   materialProperties.direction === DIRECTION.RIGHT ? left : right
+
+          // if (
+          //   !this.grid.has(oppositeSide) &&
+          //   leftPosition >= 0 &&
+          //   rightPosition <= canvasWidth
+          // ) {
+          //   materialProperties.direction =
+          //     materialProperties.direction === DIRECTION.LEFT
+          //       ? DIRECTION.RIGHT
+          //       : DIRECTION.LEFT
+
+          //   this.grid.delete(`${gridPos.x},${pos.y}`)
+          //   this.grid.set(`${gridPos.x},${gridPos.y}`, entity)
+          //   const offset =
+          //     materialProperties.direction === DIRECTION.RIGHT ? 1 : -1
+
+          //   this.updateEntityPositionFromGridPos(
+          //     pos,
+          //     PointUtils.getCanvasCoord({
+          //       x: gridPos.x + offset,
+          //       y: gridPos.y
+          //     })
+          //   )
+          //   return
+          // }
         }
       }
     })
+  }
+
+  private isPointInsideCanvasWidthGrid(pointGrid: Point): boolean {
+    const canvasWidth =
+      Math.floor(this.canvasCtx.canvas.width / DEFAULT_PIXEL_SIZE) - 1
+
+    return pointGrid.x - 1 >= 0 && pointGrid.x + 1 <= canvasWidth
+  }
+
+  private updateEntityPositionFromGridPos(
+    position: PositionComponent,
+    newPosition: Point
+  ): void {
+    Object.assign(position, newPosition)
   }
 
   private sortFromBottomToTop(entities: Entity[]) {

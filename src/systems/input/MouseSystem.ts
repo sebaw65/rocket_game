@@ -16,11 +16,11 @@ export class MouseSystem {
   constructor(
     canvas: HTMLCanvasElement,
     entities: Entity[],
-    pixelSize: number
+    pixelsToDraw: number
   ) {
     this.canvas = canvas
     this.entities = entities
-    this.pixelsToDraw = pixelSize
+    this.pixelsToDraw = pixelsToDraw
     this.setupEventListeners()
   }
 
@@ -46,10 +46,7 @@ export class MouseSystem {
   }
 
   private drawPixel = (point: Point) => {
-    const pointStrokeStartingPoint = {
-      x: this.calculateGridPosition(point.x),
-      y: this.calculateGridPosition(point.y)
-    }
+    const pointStrokeStartingPoint = PointUtils.getGridPosition(point)
 
     Array.from({ length: this.pixelsToDraw }).forEach((_, index) => {
       const pointInGrid: Point = {
@@ -60,10 +57,8 @@ export class MouseSystem {
       for (const entity of this.entities) {
         const entityPosition = entity.getComponent(PositionComponent)
         if (!entityPosition) continue
-        const entityPositionInGrid: Point = {
-          x: this.calculateGridPosition(entityPosition.x),
-          y: this.calculateGridPosition(entityPosition.y)
-        }
+        const entityPositionInGrid: Point =
+          PointUtils.getGridPosition(entityPosition)
 
         if (PointUtils.equals(pointInGrid, entityPositionInGrid)) {
           return
@@ -72,10 +67,7 @@ export class MouseSystem {
 
       if (!this.isPointInsideCanvasArea(pointInGrid)) return
 
-      this.addEntity({
-        x: this.calculateCanvasCoord(pointInGrid.x),
-        y: this.calculateCanvasCoord(pointInGrid.y)
-      })
+      this.addEntity(PointUtils.getCanvasCoord(pointInGrid))
     })
   }
 
@@ -87,14 +79,6 @@ export class MouseSystem {
     if (point.y > maxHeightCount || point.x > maxWidthCount) return false
 
     return true
-  }
-
-  private calculateGridPosition(pointCoord: number) {
-    return Math.floor(pointCoord / DEFAULT_PIXEL_SIZE)
-  }
-
-  private calculateCanvasCoord(positionInGrid: number) {
-    return positionInGrid * DEFAULT_PIXEL_SIZE
   }
 
   /**
