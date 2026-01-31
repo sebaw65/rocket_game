@@ -33,15 +33,15 @@ export class Toolkit {
     const wrapper = document.createElement("div")
     wrapper.innerText = "Stroke Size:"
 
-    const strokeSize = [5, 10, 15, 20, 30]
+    const strokeSize = [1, 2, 3, 4, 5]
 
     for (let i = 0; i < strokeSize.length; i++) {
-      const size = strokeSize[i]
+      const pixelsToDraw = strokeSize[i]
       const strokeBtn = document.createElement("button")
-      strokeBtn.innerText = (size / DEFAULT_PIXEL_SIZE).toString()
+      strokeBtn.innerText = pixelsToDraw.toString()
       wrapper.appendChild(strokeBtn)
       strokeBtn.addEventListener("click", () =>
-        this.drawingSettings.setStrokeWidth(size)
+        this.drawingSettings.setStrokeWidth(pixelsToDraw)
       )
     }
     this.toolkitElement.appendChild(wrapper)

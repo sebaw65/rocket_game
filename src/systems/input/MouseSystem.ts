@@ -1,17 +1,16 @@
 import { MaterialComponent } from "@/components/MaterialComponent"
-import { ObjectPsychicsComponent } from "@/components/ObjectPsychicsComponent"
 import { PositionComponent } from "@/components/PositionComponent"
 import { RenderMaterial } from "@/components/RenderMaterial"
 import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
 import { MATERIAL, MaterialType } from "@/types/Material"
-import { Point } from "@/types/Point"
+import { Point, PointUtils } from "@/types/Point"
 
 export class MouseSystem {
   private canvas: HTMLCanvasElement
   private isMouseDown: boolean = false
   private entities: Entity[] = []
-  private pixelSize: number
+  private pixelsToDraw: number
   private material: MaterialType = MATERIAL.WATER
 
   constructor(
@@ -21,12 +20,15 @@ export class MouseSystem {
   ) {
     this.canvas = canvas
     this.entities = entities
-    this.pixelSize = pixelSize
+    this.pixelsToDraw = pixelSize
     this.setupEventListeners()
   }
 
-  public updateStrokeParams(pixelSize: number, material: MaterialType): void {
-    this.pixelSize = pixelSize
+  public updateStrokeParams(
+    pixelsToDraw: number,
+    material: MaterialType
+  ): void {
+    this.pixelsToDraw = pixelsToDraw
     this.material = material
   }
 
@@ -44,59 +46,74 @@ export class MouseSystem {
   }
 
   private drawPixel = (point: Point) => {
-    if (
-      point.x % DEFAULT_PIXEL_SIZE === 0 &&
-      point.y % DEFAULT_PIXEL_SIZE === 0
-    ) {
-      this.addEntity(point)
-      return
+    const pointStrokeStartingPoint = {
+      x: this.calculateGridPosition(point.x),
+      y: this.calculateGridPosition(point.y)
     }
 
-    this.addEntity({
-      x: point.x - (point.x % DEFAULT_PIXEL_SIZE),
-      y: point.y - (point.y % DEFAULT_PIXEL_SIZE)
+    Array.from({ length: this.pixelsToDraw }).forEach((_, index) => {
+      const pointInGrid: Point = {
+        x: pointStrokeStartingPoint.x + index,
+        y: pointStrokeStartingPoint.y
+      }
+
+      for (const entity of this.entities) {
+        const entityPosition = entity.getComponent(PositionComponent)
+        if (!entityPosition) continue
+        const entityPositionInGrid: Point = {
+          x: this.calculateGridPosition(entityPosition.x),
+          y: this.calculateGridPosition(entityPosition.y)
+        }
+
+        if (PointUtils.equals(pointInGrid, entityPositionInGrid)) {
+          return
+        }
+      }
+
+      if (!this.isPointInsideCanvasArea(pointInGrid)) return
+
+      this.addEntity({
+        x: this.calculateCanvasCoord(pointInGrid.x),
+        y: this.calculateCanvasCoord(pointInGrid.y)
+      })
     })
   }
 
+  private isPointInsideCanvasArea(point: Point) {
+    const maxHeightCount =
+      Math.floor(this.canvas.height / DEFAULT_PIXEL_SIZE) - 1
+    const maxWidthCount = Math.floor(this.canvas.width / DEFAULT_PIXEL_SIZE) - 1
+
+    if (point.y > maxHeightCount || point.x > maxWidthCount) return false
+
+    return true
+  }
+
+  private calculateGridPosition(pointCoord: number) {
+    return Math.floor(pointCoord / DEFAULT_PIXEL_SIZE)
+  }
+
+  private calculateCanvasCoord(positionInGrid: number) {
+    return positionInGrid * DEFAULT_PIXEL_SIZE
+  }
+
   /**
-   * Draw new pixels via cursor
-   * Attach material and position component
+   * Draw new pixels via cursor and attach components
    */
   private addEntity = (point: Point) => {
-    let entities: Entity[] = []
+    const newEntity = new Entity()
 
-    if (this.pixelSize === DEFAULT_PIXEL_SIZE) {
-      const newEntity = new Entity()
-      const materialComponent = new MaterialComponent(this.material)
-      newEntity.addComponent(
-        new RenderMaterial(
-          materialComponent.getColor(),
-          materialComponent.isLiquid(),
-          materialComponent.isMovable()
-        )
+    const materialComponent = new MaterialComponent(this.material)
+    newEntity.addComponent(
+      new RenderMaterial(
+        materialComponent.getColor(),
+        materialComponent.isLiquid(),
+        materialComponent.isMovable(),
+        materialComponent.getDirection()
       )
-      newEntity.addComponent(new PositionComponent(point.x, point.y))
-      newEntity.addComponent(new ObjectPsychicsComponent(true))
-      entities.push(newEntity)
-    } else {
-      const count = this.pixelSize / DEFAULT_PIXEL_SIZE
-      for (let i = 0; i < count; i++) {
-        const newEntity = new Entity()
-        const materialComponent = new MaterialComponent(this.material)
-        newEntity.addComponent(
-          new RenderMaterial(
-            materialComponent.getColor(),
-            materialComponent.isLiquid(),
-            materialComponent.isMovable()
-          )
-        )
-        const newXPosition = point.x + i * DEFAULT_PIXEL_SIZE
-        newEntity.addComponent(new PositionComponent(newXPosition, point.y))
-        newEntity.addComponent(new ObjectPsychicsComponent(true))
-        entities.push(newEntity)
-      }
-    }
+    )
+    newEntity.addComponent(new PositionComponent(point.x, point.y))
 
-    this.entities.push(...entities)
+    this.entities.push(newEntity)
   }
 }

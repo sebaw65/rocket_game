@@ -2,7 +2,7 @@ import { MATERIAL, MaterialType } from "@/types/Material"
 
 interface SettingsType {
   material: MaterialType
-  stronkeSize: number
+  pixelsToDraw: number
 }
 
 export class DrawingSettings {
@@ -10,7 +10,7 @@ export class DrawingSettings {
 
   private settings: SettingsType = {
     material: MATERIAL.WATER,
-    stronkeSize: 5
+    pixelsToDraw: 1
   }
 
   private constructor() {}
@@ -27,9 +27,8 @@ export class DrawingSettings {
     this.settings.material = material
   }
 
-  setStrokeWidth(size: number) {
-    console.log(size)
-    this.settings.stronkeSize = size
+  setStrokeWidth(pixelsToDraw: number) {
+    this.settings.pixelsToDraw = pixelsToDraw
   }
 
   getMaterial() {
@@ -37,6 +36,6 @@ export class DrawingSettings {
   }
 
   getStrokeSize() {
-    return this.settings.stronkeSize
+    return this.settings.pixelsToDraw
   }
 }

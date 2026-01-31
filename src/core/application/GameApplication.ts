@@ -32,18 +32,14 @@ export class GameApplication {
   private bootstrapSystems() {
     // implement systems
     new ResizeSystem(this.canvasSystem.ctx, this.entities)
-    this.renderSystem = new RenderSystem(
-      this.canvasSystem.ctx,
-      this.drawingSettings.getStrokeSize()
-    )
+    this.renderSystem = new RenderSystem(this.canvasSystem.ctx)
     this.mouseSystem = new MouseSystem(
       this.canvasSystem.canvas,
       this.entities,
       this.drawingSettings.getStrokeSize()
     )
     this.cellularAutomataSystem = new CellularAutomataSystem(
-      this.canvasSystem.ctx,
-      this.drawingSettings.getStrokeSize()
+      this.canvasSystem.ctx
     )
 
     // Set bg color

@@ -1,15 +1,14 @@
 import { PositionComponent } from "@/components/PositionComponent"
 import { RenderMaterial } from "@/components/RenderMaterial"
+import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
 import { System } from "@/types/System"
 
 export class RenderSystem implements System {
   private canvasCtx: CanvasRenderingContext2D
-  private pixelSize: number
 
-  constructor(canvasCtx: CanvasRenderingContext2D, pixelSize: number) {
+  constructor(canvasCtx: CanvasRenderingContext2D) {
     this.canvasCtx = canvasCtx
-    this.pixelSize = pixelSize
   }
 
   public update(entities: Entity[]): void {
@@ -27,7 +26,12 @@ export class RenderSystem implements System {
 
       if (pos && render) {
         this.canvasCtx.fillStyle = render.color
-        this.canvasCtx.fillRect(pos.x, pos.y, this.pixelSize, this.pixelSize)
+        this.canvasCtx.fillRect(
+          pos.x,
+          pos.y,
+          DEFAULT_PIXEL_SIZE,
+          DEFAULT_PIXEL_SIZE
+        )
       }
     })
   }

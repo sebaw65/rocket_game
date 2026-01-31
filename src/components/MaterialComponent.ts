@@ -2,6 +2,7 @@ import { MATERIALS_CONFIG } from "@/config/MaterialsConfig"
 import { Component } from "@/types/Component"
 import { MaterialProperties } from "@/types/MaterialProperties"
 import { MaterialType } from "@/types/Material"
+import { DirectionType } from "@/types/Direction"
 
 export class MaterialComponent extends Component {
   public properties: MaterialProperties
@@ -21,5 +22,10 @@ export class MaterialComponent extends Component {
 
   isMovable(): boolean {
     return this.properties.isMovable ?? true
+  }
+
+  getDirection(): DirectionType | null {
+    if (!this.properties.direction) return null
+    return this.properties.direction
   }
 }
