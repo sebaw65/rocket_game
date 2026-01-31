@@ -90,7 +90,7 @@ export class CellularAutomataSystem implements System {
             !this.grid.has(side) &&
             this.isPointInsideCanvasWidthGrid(gridPos)
           ) {
-            this.grid.delete(`${gridPos.x},${pos.y}`)
+            this.grid.delete(`${gridPos.x},${gridPos.y}`)
             this.grid.set(`${gridPos.x},${gridPos.y}`, entity)
             const offset =
               materialProperties.direction === DIRECTION.RIGHT ? 1 : -1
