@@ -1,5 +1,5 @@
 import { PositionComponent } from "@/components/PositionComponent"
-import { RenderMaterial } from "@/components/RenderMaterial"
+import { RenderMaterial } from "@/components/material/RenderMaterial"
 import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
 import { System } from "@/types/System"

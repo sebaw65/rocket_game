@@ -1,6 +1,6 @@
-import { MaterialComponent } from "@/components/MaterialComponent"
+import { MaterialComponent } from "@/components/material/MaterialComponent"
 import { PositionComponent } from "@/components/PositionComponent"
-import { RenderMaterial } from "@/components/RenderMaterial"
+import { RenderMaterial } from "@/components/material/RenderMaterial"
 import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
 import { MATERIAL, MaterialType } from "@/types/Material"
@@ -93,7 +93,8 @@ export class MouseSystem {
         materialComponent.getColor(),
         materialComponent.isLiquid(),
         materialComponent.isMovable(),
-        materialComponent.getDirection()
+        materialComponent.getDirection(),
+        materialComponent.movementSystem
       )
     )
     newEntity.addComponent(new PositionComponent(point.x, point.y))

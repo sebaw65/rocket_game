@@ -1,15 +1,21 @@
 import { MATERIALS_CONFIG } from "@/config/MaterialsConfig"
-import { Component } from "@/types/Component"
 import { MaterialProperties } from "@/types/MaterialProperties"
 import { MaterialType } from "@/types/Material"
 import { DirectionType } from "@/types/Direction"
+import { MaterialMovementSystem } from "@/systems/material-movement/MaterialMovementSystem"
 
-export class MaterialComponent extends Component {
-  public properties: MaterialProperties
+/**
+ * Used to get data from config file
+ */
+export class MaterialComponent {
+  public movementSystem: MaterialMovementSystem
+  private properties: MaterialProperties
 
-  constructor(public type: MaterialType) {
-    super()
-    this.properties = MATERIALS_CONFIG[type]!
+  constructor(type: MaterialType) {
+    this.properties = MATERIALS_CONFIG[type]
+
+    const movementSystemClass = this.properties.movementSystemClass
+    this.movementSystem = new movementSystemClass()
   }
 
   getColor(): string {
