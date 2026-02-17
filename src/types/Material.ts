@@ -1,4 +1,4 @@
-export const MATERIAL = {
+export const Material = {
   WATER: "WATER",
   SAND: "SAND",
   LAVA: "LAVA",
@@ -6,4 +6,4 @@ export const MATERIAL = {
   STONE: "STONE"
 } as const
 
-export type MaterialType = (typeof MATERIAL)[keyof typeof MATERIAL]
+export type MaterialType = (typeof Material)[keyof typeof Material]

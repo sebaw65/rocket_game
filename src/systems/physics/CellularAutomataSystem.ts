@@ -1,10 +1,10 @@
 import { PositionComponent } from "@/components/PositionComponent"
-import { RenderMaterial } from "@/components/material/RenderMaterial"
 import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
 import { PointUtils } from "@/types/Point"
 import { System } from "@/types/System"
 import { MaterialMovementContext } from "@/types/MaterialMovementContext"
+import { MaterialComponent } from "@/components/material/MaterialComponent"
 
 export class CellularAutomataSystem implements System {
   private grid: Map<string, Entity>
@@ -43,9 +43,9 @@ export class CellularAutomataSystem implements System {
     const context = this.createContext()
 
     entities.forEach((entity) => {
-      const materialProperties = entity.getComponent(RenderMaterial)
+      const materialProperties = entity.getComponent(MaterialComponent)
 
-      materialProperties?.materialMovement.update(entity, context)
+      materialProperties?.movementSystem.update(entity, context)
     })
   }
 

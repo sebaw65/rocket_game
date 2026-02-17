@@ -1,14 +1,14 @@
 import { Entity } from "@/entities/Entity"
 import { Point, PointUtils } from "@/types/Point"
 import { MaterialMovementSystem } from "../MaterialMovementSystem"
-import { RenderMaterial } from "@/components/material/RenderMaterial"
 import { MaterialMovementContext } from "@/types/MaterialMovementContext"
 import { PositionComponent } from "@/components/PositionComponent"
 import { DIRECTION } from "@/types/Direction"
+import { MaterialComponent } from "@/components/material/MaterialComponent"
 
 export class LiquidMaterialSystem extends MaterialMovementSystem {
   shouldProcess(entity: Entity): boolean {
-    const material = entity.getComponent(RenderMaterial)
+    const material = entity.getComponent(MaterialComponent)
 
     return material?.isLiquid ?? false
   }
@@ -16,7 +16,7 @@ export class LiquidMaterialSystem extends MaterialMovementSystem {
   // TODO Dodać ruch po skosie
   moveEntity(entity: Entity, ctx: MaterialMovementContext): void {
     const pos = entity.getComponent(PositionComponent)
-    const material = entity.getComponent(RenderMaterial)
+    const material = entity.getComponent(MaterialComponent)
     if (!pos || !material) return
 
     const gridPos = PointUtils.getGridPosition(pos)
@@ -25,7 +25,7 @@ export class LiquidMaterialSystem extends MaterialMovementSystem {
     if (this.isInsideCanvasHeight(gridPos, ctx)) return
 
     if (!ctx.grid.has(positionBelow)) {
-      if (material) material.direction = null
+      if (material) material.currentDirection = null
 
       ctx.grid.delete(`${gridPos.x},${gridPos.y}`)
       ctx.grid.set(`${positionBelow}`, entity)
@@ -45,12 +45,14 @@ export class LiquidMaterialSystem extends MaterialMovementSystem {
     const leftKey = `${leftPosition},${gridPos.y}`
     const rightKey = `${rightPosition},${gridPos.y}`
 
-    if (!material.direction) {
+    if (!material.currentDirection) {
       const direction = Math.random() > 0.5 ? 1 : -1
-      material.direction = direction > 0 ? DIRECTION.RIGHT : DIRECTION.LEFT
+      material.currentDirection =
+        direction > 0 ? DIRECTION.RIGHT : DIRECTION.LEFT
     }
 
-    const side = material.direction === DIRECTION.RIGHT ? rightKey : leftKey
+    const side =
+      material.currentDirection === DIRECTION.RIGHT ? rightKey : leftKey
 
     if (
       !ctx.grid.has(side) &&
@@ -58,7 +60,7 @@ export class LiquidMaterialSystem extends MaterialMovementSystem {
     ) {
       ctx.grid.delete(`${gridPos.x},${gridPos.y}`)
       ctx.grid.set(`${gridPos.x},${gridPos.y}`, entity)
-      const offset = material.direction === DIRECTION.RIGHT ? 1 : -1
+      const offset = material.currentDirection === DIRECTION.RIGHT ? 1 : -1
 
       this.updateEntityPositionFromGridPos(
         pos,
@@ -71,20 +73,24 @@ export class LiquidMaterialSystem extends MaterialMovementSystem {
     }
 
     const oppositeSide =
-      material.direction === DIRECTION.RIGHT ? leftKey : rightKey
+      material.currentDirection === DIRECTION.RIGHT ? leftKey : rightKey
     const oppositePos =
-      material.direction === DIRECTION.RIGHT ? leftPosition : rightPosition
+      material.currentDirection === DIRECTION.RIGHT
+        ? leftPosition
+        : rightPosition
 
     if (
       !ctx.grid.has(oppositeSide) &&
       this.isPointInsideCanvasWidthGrid({ x: oppositePos, y: gridPos.y }, ctx)
     ) {
-      material.direction =
-        material.direction === DIRECTION.LEFT ? DIRECTION.RIGHT : DIRECTION.LEFT
+      material.currentDirection =
+        material.currentDirection === DIRECTION.LEFT
+          ? DIRECTION.RIGHT
+          : DIRECTION.LEFT
 
       ctx.grid.delete(`${gridPos.x},${gridPos.y}`)
       ctx.grid.set(`${oppositePos},${gridPos.y}`, entity)
-      const offset = material.direction === DIRECTION.RIGHT ? 1 : -1
+      const offset = material.currentDirection === DIRECTION.RIGHT ? 1 : -1
 
       this.updateEntityPositionFromGridPos(
         pos,

@@ -1,9 +1,9 @@
 import { MaterialComponent } from "@/components/material/MaterialComponent"
 import { PositionComponent } from "@/components/PositionComponent"
-import { RenderMaterial } from "@/components/material/RenderMaterial"
+import { MATERIALS_CONFIG } from "@/config/MaterialsConfig"
 import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
-import { MATERIAL, MaterialType } from "@/types/Material"
+import { Material, MaterialType } from "@/types/Material"
 import { Point, PointUtils } from "@/types/Point"
 
 export class MouseSystem {
@@ -11,7 +11,7 @@ export class MouseSystem {
   private isMouseDown: boolean = false
   private entities: Entity[] = []
   private pixelsToDraw: number
-  private material: MaterialType = MATERIAL.WATER
+  private material: MaterialType = Material.WATER
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -87,15 +87,8 @@ export class MouseSystem {
   private addEntity = (point: Point) => {
     const newEntity = new Entity()
 
-    const materialComponent = new MaterialComponent(this.material)
     newEntity.addComponent(
-      new RenderMaterial(
-        materialComponent.getColor(),
-        materialComponent.isLiquid(),
-        materialComponent.isMovable(),
-        materialComponent.getDirection(),
-        materialComponent.movementSystem
-      )
+      new MaterialComponent(MATERIALS_CONFIG[this.material])
     )
     newEntity.addComponent(new PositionComponent(point.x, point.y))
 

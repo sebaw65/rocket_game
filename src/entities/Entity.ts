@@ -1,7 +1,12 @@
+import { MaterialComponent } from "@/components/material/MaterialComponent"
+import { PositionComponent } from "@/components/PositionComponent"
+
+type EntityComponents = MaterialComponent | PositionComponent
+
 export class Entity {
   private components = new Map<Function, any>()
 
-  addComponent(component: any) {
+  addComponent(component: EntityComponents) {
     this.components.set(component.constructor, component)
   }
 

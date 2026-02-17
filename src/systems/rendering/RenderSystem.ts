@@ -1,5 +1,5 @@
 import { PositionComponent } from "@/components/PositionComponent"
-import { RenderMaterial } from "@/components/material/RenderMaterial"
+import { MaterialComponent } from "@/components/material/MaterialComponent"
 import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
 import { System } from "@/types/System"
@@ -22,9 +22,8 @@ export class RenderSystem implements System {
 
     entities.forEach((entity) => {
       const pos = entity.getComponent(PositionComponent)
-      const render = entity.getComponent(RenderMaterial)
+      const render = entity.getComponent(MaterialComponent)
 
-      // console.log(pos)
       if (pos && render) {
         this.canvasCtx.fillStyle = render.color
         this.canvasCtx.fillRect(
