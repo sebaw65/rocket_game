@@ -1,9 +1,9 @@
 import { PositionComponent } from "@/components/PositionComponent"
 import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
-import { PointUtils } from "@/types/Point"
+import { PointUtils } from "@/systems/input/Point"
 import { System } from "@/types/System"
-import { MaterialMovementContext } from "@/types/MaterialMovementContext"
+import { MaterialMovementContext } from "@/systems/material-movement/MaterialMovementContext"
 import { MaterialComponent } from "@/components/material/MaterialComponent"
 
 export class CellularAutomataSystem implements System {

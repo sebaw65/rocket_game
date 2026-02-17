@@ -1,5 +1,5 @@
 import { DrawingSettings } from "@/data/DrawingSettings"
-import { Material, MaterialType } from "@/types/Material"
+import { MaterialType, MaterialType } from "@/components/material/MaterialType"
 
 export class Toolkit {
   private drawingSettings: DrawingSettings
@@ -13,12 +13,12 @@ export class Toolkit {
     const wrapper = document.createElement("div")
     wrapper.innerText = "Materials:"
 
-    for (let i = 0; i < Object.keys(Material).length; i++) {
+    for (let i = 0; i < Object.keys(MaterialType).length; i++) {
       const materialBtn = document.createElement("button")
-      materialBtn.innerText = Object.keys(Material)[i]
+      materialBtn.innerText = Object.keys(MaterialType)[i]
       materialBtn.addEventListener("click", () =>
         this.drawingSettings.setMaterial(
-          Object.keys(Material)[i] as MaterialType
+          Object.keys(MaterialType)[i] as MaterialType
         )
       )
 

@@ -3,15 +3,15 @@ import { PositionComponent } from "@/components/PositionComponent"
 import { MATERIALS_CONFIG } from "@/config/MaterialsConfig"
 import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
-import { Material, MaterialType } from "@/types/Material"
-import { Point, PointUtils } from "@/types/Point"
+import { MaterialType, MaterialType } from "@/components/material/MaterialType"
+import { Point, PointUtils } from "@/systems/input/Point"
 
 export class MouseSystem {
   private canvas: HTMLCanvasElement
   private isMouseDown: boolean = false
   private entities: Entity[] = []
   private pixelsToDraw: number
-  private material: MaterialType = Material.WATER
+  private material: MaterialType = MaterialType.WATER
 
   constructor(
     canvas: HTMLCanvasElement,

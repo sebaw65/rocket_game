@@ -1,5 +1,5 @@
 import { Entity } from "@/entities/Entity"
-import { MaterialMovementContext } from "@/types/MaterialMovementContext"
+import { MaterialMovementContext } from "@/systems/material-movement/MaterialMovementContext"
 
 export abstract class MaterialMovementSystem {
   abstract shouldProcess(entity: Entity): boolean
