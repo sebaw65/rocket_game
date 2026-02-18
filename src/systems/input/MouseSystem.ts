@@ -1,9 +1,9 @@
 import { MaterialComponent } from "@/components/material/MaterialComponent"
 import { PositionComponent } from "@/components/PositionComponent"
-import { MATERIALS_CONFIG } from "@/config/MaterialsConfig"
+import { MaterialsConfig } from "@/components/material/MaterialsConfig"
 import { DEFAULT_PIXEL_SIZE } from "@/config/SystemConfig"
 import { Entity } from "@/entities/Entity"
-import { MaterialType, MaterialType } from "@/components/material/MaterialType"
+import { MaterialType } from "@/components/material/MaterialType"
 import { Point, PointUtils } from "@/systems/input/Point"
 
 export class MouseSystem {
@@ -88,7 +88,7 @@ export class MouseSystem {
     const newEntity = new Entity()
 
     newEntity.addComponent(
-      new MaterialComponent(MATERIALS_CONFIG[this.material])
+      new MaterialComponent(MaterialsConfig[this.material])
     )
     newEntity.addComponent(new PositionComponent(point.x, point.y))
 

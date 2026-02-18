@@ -1,25 +1,15 @@
 import { MaterialMovementSystem } from "@/systems/material-movement/MaterialMovementSystem"
 import { DirectionType } from "@/types/Direction"
+import { Material } from "./Material"
+import { PartialNullable } from "@/types/PartialNullable"
 
-export type MaterialConfig = {
+export class MaterialComponent implements PartialNullable<Material> {
   color: string
-  isLiquid?: boolean
-  isMovable?: boolean
-  currentDirection?: DirectionType
-  movementSystem: MaterialMovementSystem
-}
-
-export class MaterialComponent {
-  color: string
-  isLiquid: boolean
-  isMovable: boolean
   currentDirection: DirectionType | null
   movementSystem: MaterialMovementSystem
 
-  constructor(config: MaterialConfig) {
+  constructor(config: Material) {
     this.color = config.color
-    this.isLiquid = config.isLiquid ?? false
-    this.isMovable = config.isMovable ?? false
     this.currentDirection = config.currentDirection ?? null
     this.movementSystem = config.movementSystem
   }

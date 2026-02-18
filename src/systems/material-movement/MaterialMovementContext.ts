@@ -5,4 +5,6 @@ export interface MaterialMovementContext {
   fallSpeed: number
   canvasGridHeight: number
   canvasGridWidth: number
+
+  processedEntities: Set<Entity>
 }

@@ -41,6 +41,7 @@ export class CellularAutomataSystem implements System {
     this.sortFromBottomToTop(entities)
 
     const context = this.createContext()
+    context.processedEntities.clear()
 
     entities.forEach((entity) => {
       const materialProperties = entity.getComponent(MaterialComponent)
@@ -56,7 +57,8 @@ export class CellularAutomataSystem implements System {
       canvasGridHeight:
         Math.floor(this.canvasCtx.canvas.height / DEFAULT_PIXEL_SIZE) - 1,
       canvasGridWidth:
-        Math.floor(this.canvasCtx.canvas.width / DEFAULT_PIXEL_SIZE) - 1
+        Math.floor(this.canvasCtx.canvas.width / DEFAULT_PIXEL_SIZE) - 1,
+      processedEntities: new Set()
     }
   }
 
