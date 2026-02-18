@@ -1,4 +1,4 @@
-import { MaterialType, MaterialType } from "@/components/material/MaterialType"
+import { MaterialType } from "@/components/material/MaterialType"
 
 interface SettingsType {
   material: MaterialType

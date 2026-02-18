@@ -1,5 +1,5 @@
 import { DrawingSettings } from "@/data/DrawingSettings"
-import { MaterialType, MaterialType } from "@/components/material/MaterialType"
+import { MaterialType } from "@/components/material/MaterialType"
 
 export class Toolkit {
   private drawingSettings: DrawingSettings
