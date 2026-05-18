@@ -23,13 +23,14 @@ export class LiquidMaterialSystem extends MaterialMovementSystem {
 
     const leftPosition = gridPos.x - 1
     const rightPosition = gridPos.x + 1
-    const diagonalLeftKey = `${leftPosition},${gridPos.y + ctx.fallSpeed}`
-    const diagonalRightKey = `${rightPosition},${gridPos.y + ctx.fallSpeed}`
+    const nextY = gridPos.y + ctx.fallSpeed
+    const diagonalLeftKey = `${leftPosition},${nextY}`
+    const diagonalRightKey = `${rightPosition},${nextY}`
 
-    if (
-      (ctx.grid.has(positionBelow) && !ctx.grid.has(diagonalLeftKey)) ||
-      !ctx.grid.has(diagonalRightKey)
-    ) {
+    const leftFree = leftPosition >= 0 && !ctx.grid.has(diagonalLeftKey)
+    const rightFree = rightPosition <= ctx.canvasGridWidth && !ctx.grid.has(diagonalRightKey)
+
+    if (leftFree || rightFree) {
       this.moveDiagonal(entity, ctx)
       return
     }
