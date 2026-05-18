@@ -2,9 +2,13 @@ import { MaterialType } from "@/components/material/MaterialType"
 import { LiquidMaterialSystem } from "@/systems/material-movement/material-type/LiquidMaterialSystem"
 import { StaticMaterialSystem } from "@/systems/material-movement/material-type/StaticMaterialSystem"
 import { LooseMaterialSystem } from "@/systems/material-movement/material-type/LooseMaterialSystem"
-import { Material } from "./Material"
+import { MaterialComponent } from "./MaterialComponent"
 
-export const MaterialsConfig: Record<MaterialType, Material> = {
+export const MaterialsConfig: Record<
+  MaterialType,
+  Omit<MaterialComponent, "sleeping" | "currentDirection"> &
+    Partial<Pick<MaterialComponent, "sleeping" | "currentDirection">>
+> = {
   [MaterialType.WATER]: {
     color: "#0d5388",
     movementSystem: new LiquidMaterialSystem()

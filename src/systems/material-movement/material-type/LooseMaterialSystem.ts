@@ -12,7 +12,10 @@ export class LooseMaterialSystem extends MaterialMovementSystem {
     if (!pos || !material) return
 
     const gridPos = PointUtils.getGridPosition(pos)
-    if (this.isInsideCanvasHeight(gridPos, ctx)) return
+    if (this.isInsideCanvasHeight(gridPos, ctx)) {
+      material.sleeping = true
+      return
+    }
 
     const positionBelow = `${gridPos.x},${gridPos.y + ctx.fallSpeed}`
 
@@ -31,6 +34,9 @@ export class LooseMaterialSystem extends MaterialMovementSystem {
       (!ctx.grid.has(diagonalLeftKey) || !ctx.grid.has(diagonalRightKey))
     ) {
       this.moveDiagonal(entity, ctx)
+      return
     }
+
+    material.sleeping = true
   }
 }

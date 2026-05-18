@@ -75,36 +75,6 @@ export abstract class MaterialMovementSystem {
       )
       return
     }
-
-    const oppositeSide =
-      material.currentDirection === DIRECTION.RIGHT ? leftKey : rightKey
-    const oppositePos =
-      material.currentDirection === DIRECTION.RIGHT
-        ? leftPosition
-        : rightPosition
-
-    if (
-      !ctx.grid.has(oppositeSide) &&
-      this.isPointInsideCanvasWidthGrid({ x: oppositePos, y: gridPos.y }, ctx)
-    ) {
-      material.currentDirection =
-        material.currentDirection === DIRECTION.LEFT
-          ? DIRECTION.RIGHT
-          : DIRECTION.LEFT
-
-      ctx.grid.delete(`${gridPos.x},${gridPos.y}`)
-      ctx.grid.set(`${oppositePos},${gridPos.y}`, entity)
-      const offset = material.currentDirection === DIRECTION.RIGHT ? 1 : -1
-
-      this.updateEntityPositionFromGridPos(
-        pos,
-        PointUtils.getCanvasCoord({
-          x: gridPos.x + offset,
-          y: gridPos.y
-        })
-      )
-      return
-    }
   }
 
   protected moveDiagonal(entity: Entity, ctx: MaterialMovementContext) {
@@ -139,6 +109,12 @@ export abstract class MaterialMovementSystem {
     ctx: MaterialMovementContext
   ): boolean {
     return gridPos.y + ctx.fallSpeed > ctx.canvasGridHeight
+  }
+
+  // TODO Z jakiegoś powodu niektóre pixele uciekają poza ekran
+  protected isInsideCanvasWidth(xPos: number, ctx: MaterialMovementContext) {
+    console.log({ pos: xPos, ctx: ctx.canvasGridWidth })
+    return xPos >= 0 && xPos <= ctx.canvasGridWidth
   }
 
   private updateEntityPositionFromGridPos(
