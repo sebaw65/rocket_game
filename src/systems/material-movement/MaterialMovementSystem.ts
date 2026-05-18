@@ -63,7 +63,7 @@ export abstract class MaterialMovementSystem {
       this.isPointInsideCanvasWidthGrid(gridPos, ctx)
     ) {
       ctx.grid.delete(`${gridPos.x},${gridPos.y}`)
-      ctx.grid.set(`${side},${gridPos.y}`, entity)
+      ctx.grid.set(side, entity)
       const offset = material.currentDirection === DIRECTION.RIGHT ? 1 : -1
 
       this.updateEntityPositionFromGridPos(
@@ -86,20 +86,26 @@ export abstract class MaterialMovementSystem {
 
     const leftPosition = gridPos.x - 1
     const rightPosition = gridPos.x + 1
-    const diagonalLeftKey = `${leftPosition},${gridPos.y + ctx.fallSpeed}`
+    const nextY = gridPos.y + ctx.fallSpeed
 
-    const newPosition = !ctx.grid.has(diagonalLeftKey)
-      ? leftPosition
-      : rightPosition
+    const diagonalLeftKey = `${leftPosition},${nextY}`
+    const diagonalRightKey = `${rightPosition},${nextY}`
+
+    const leftFree = leftPosition >= 0 && !ctx.grid.has(diagonalLeftKey)
+    const rightFree = rightPosition <= ctx.canvasGridWidth && !ctx.grid.has(diagonalRightKey)
+
+    if (!leftFree && !rightFree) return
+
+    const newPosition = leftFree ? leftPosition : rightPosition
 
     ctx.grid.delete(`${gridPos.x},${gridPos.y}`)
-    ctx.grid.set(`${newPosition},${gridPos.y + ctx.fallSpeed}`, entity)
+    ctx.grid.set(`${newPosition},${nextY}`, entity)
 
     this.updateEntityPositionFromGridPos(
       pos,
       PointUtils.getCanvasCoord({
         x: newPosition,
-        y: gridPos.y + ctx.fallSpeed
+        y: nextY
       })
     )
   }
@@ -109,12 +115,6 @@ export abstract class MaterialMovementSystem {
     ctx: MaterialMovementContext
   ): boolean {
     return gridPos.y + ctx.fallSpeed > ctx.canvasGridHeight
-  }
-
-  // TODO Z jakiegoś powodu niektóre pixele uciekają poza ekran
-  protected isInsideCanvasWidth(xPos: number, ctx: MaterialMovementContext) {
-    console.log({ pos: xPos, ctx: ctx.canvasGridWidth })
-    return xPos >= 0 && xPos <= ctx.canvasGridWidth
   }
 
   private updateEntityPositionFromGridPos(
