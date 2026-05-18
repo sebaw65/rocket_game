@@ -3,6 +3,7 @@ import { DirectionType } from "@/types/Direction"
 
 export type Material = {
   color: string
-  currentDirection?: DirectionType
+  sleeping: boolean | null
+  currentDirection: DirectionType | null
   movementSystem: MaterialMovementSystem
 }

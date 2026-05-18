@@ -45,6 +45,7 @@ export class CellularAutomataSystem implements System {
 
     entities.forEach((entity) => {
       const materialProperties = entity.getComponent(MaterialComponent)
+      if (materialProperties?.sleeping) return
 
       materialProperties?.movementSystem.update(entity, context)
     })
